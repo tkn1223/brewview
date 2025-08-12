@@ -10,10 +10,8 @@ services:
       - mariadb
     # 起動時の権限設定
     user: "${UID}:${GID}"
-    # command: >
-    #   bash -lc "chown -R www-data:www-data storage bootstrap/cache &&
-    #             chmod -R 775 storage bootstrap/cache &&
-    #             php-fpm"
+    environment:
+      - HOME=/var/www
 
   nginx:
     container_name: myapp-nginx
