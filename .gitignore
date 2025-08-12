@@ -1,0 +1,43 @@
+# Laravel Framework (my-app/ サブディレクトリ内)
+my-app/node_modules
+my-app/public/build
+my-app/public/hot
+my-app/public/storage
+my-app/storage/*.key
+my-app/storage/pail
+my-app/vendor
+
+# Environment files
+my-app/.env
+my-app/.env.backup
+my-app/.env.production
+
+# Laravel Cache & Logs
+my-app/storage/framework/cache/*
+my-app/storage/framework/sessions/*
+my-app/storage/framework/views/*
+my-app/storage/framework/testing/*
+my-app/storage/logs/*
+
+# IDE & Editor
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+my-app/.phpactor.json
+my-app/.phpunit.result.cache
+
+# Testing
+my-app/Homestead.json
+my-app/Homestead.yaml
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# MariaDB runtime data
+docker-config/mariadb/
