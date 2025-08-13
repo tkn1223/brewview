@@ -8,6 +8,8 @@ use Tests\TestCase;
 
 class ShopTest extends TestCase
 {
+    // dbのマイグレーションを実施
+    use RefreshDatabase;
     /**
      * homeページが表示できるかのテスト
      */
