@@ -7,12 +7,20 @@ const Home = (props) => {
                 <Heading
                     fontSize={{ base: "24px", md: "30px", lg: "40px" }}
                     md={2}
+                    pd="10px"
                 >
                     ショップ一覧
                 </Heading>
                 <VStack spacing={4} align="stretch">
                     {props.shops.map((shop) => (
-                        <Box key={shop.id} p={4}>
+                        <Box
+                            key={shop.id}
+                            p={4}
+                            borderWidth="1px"
+                            borderRadius={"lg"}
+                            overflow={"hidden"}
+                            boxShadow={"lg"}
+                        >
                             <HStack spacing={4}>
                                 <Image
                                     boxSize="100px"
@@ -30,12 +38,6 @@ const Home = (props) => {
                         </Box>
                     ))}
                 </VStack>
-                {/* <ul>
-                    {props.shops.map((shop) => (
-                        <li key={shop.id}>{shop.name}</li>
-                    ))}
-                </ul> */}
-                <br />
                 <h2>新着レビュー</h2>
                 <ul>
                     {props.newReviews.map((review) => (
