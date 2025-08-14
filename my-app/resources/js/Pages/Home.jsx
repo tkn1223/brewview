@@ -1,3 +1,4 @@
+import { StarIcon } from "@chakra-ui/icons";
 import { Box, Heading, HStack, Image, Text, VStack } from "@chakra-ui/react";
 
 const Home = (props) => {
@@ -7,11 +8,11 @@ const Home = (props) => {
                 <Heading
                     fontSize={{ base: "24px", md: "30px", lg: "40px" }}
                     md={2}
-                    pd="10px"
+                    pb={6}
                 >
                     ショップ一覧
                 </Heading>
-                <VStack spacing={4} align="stretch">
+                <VStack spacing={4} align="{stretch}">
                     {props.shops.map((shop) => (
                         <Box
                             key={shop.id}
@@ -38,12 +39,45 @@ const Home = (props) => {
                         </Box>
                     ))}
                 </VStack>
-                <h2>新着レビュー</h2>
-                <ul>
+                <Heading
+                    fontSize={{ base: "24px", md: "30px", lg: "40px" }}
+                    py={6}
+                >
+                    新着レビュー
+                </Heading>
+                <VStack spacing={4} align={"stretch"}>
                     {props.newReviews.map((review) => (
-                        <li key={review.id}>{review.comment}</li>
+                        <Box
+                            key={review.id}
+                            p={4}
+                            borderWidth="1px"
+                            borderRadius={"lg"}
+                            overflow={"hidden"}
+                            boxShadow={"lg"}
+                        >
+                            <VStack align={"start"}>
+                                <Text fontWeight={"bold"}>
+                                    {review.user.name}
+                                </Text>
+                                <Text>{review.comment}</Text>
+                                <HStack spacing={1}>
+                                    {Array(5)
+                                        .fill("")
+                                        .map((_, i) => (
+                                            <StarIcon
+                                                key={i}
+                                                color={
+                                                    i < review.rating
+                                                        ? "yellow.500"
+                                                        : "gray.300"
+                                                }
+                                            />
+                                        ))}
+                                </HStack>
+                            </VStack>
+                        </Box>
                     ))}
-                </ul>
+                </VStack>
             </Box>
         </>
     );
