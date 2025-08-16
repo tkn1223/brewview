@@ -26,4 +26,20 @@ class ShopController extends Controller
             'newReviews' => $newReviews,
         ]);
     }
+
+    public function detail($id)
+    {
+        // １つだけのデータ取得：find、すべてのデータ取得：get
+        $shop = Shop::find($id);
+
+        $reviews = Review::with('user')
+            ->where('shop_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return Inertia::render('Shop/Detail', [
+            'shop' => $shop,
+            'reviews' => $reviews,
+        ]);
+    }
 }
