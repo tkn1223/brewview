@@ -1,6 +1,8 @@
 import ReviewList from "@/Components/Organisms/ReviewList";
 import MainLayout from "@/Layouts/MainLayout";
-import { Box, Heading, Image, Text } from "@chakra-ui/react";
+import { PlusSquareIcon } from "@chakra-ui/icons";
+import { Box, Button, Heading, Image, Text } from "@chakra-ui/react";
+import { Link } from "@inertiajs/react";
 
 const Detail = (props) => {
     return (
@@ -32,6 +34,13 @@ const Detail = (props) => {
                         </Text>
                     )}
                 </Heading>
+                <Box>
+                    <Link href={`/review/create/shop/${props.shop.id}`}>
+                        <Button my={4} icon={<PlusSquareIcon />}>
+                            レビューを投稿する
+                        </Button>
+                    </Link>
+                </Box>
                 <Box>
                     {props.reviews.length === 0 && (
                         <Text>レビューはまだありません</Text>
