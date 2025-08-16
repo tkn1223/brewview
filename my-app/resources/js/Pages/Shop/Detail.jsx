@@ -1,6 +1,6 @@
+import ReviewList from "@/Components/Organisms/ReviewList";
 import MainLayout from "@/Layouts/MainLayout";
-import { StarIcon } from "@chakra-ui/icons";
-import { Box, Heading, HStack, Image, Text } from "@chakra-ui/react";
+import { Box, Heading, Image, Text } from "@chakra-ui/react";
 
 const Detail = (props) => {
     return (
@@ -36,36 +36,7 @@ const Detail = (props) => {
                     {props.reviews.length === 0 && (
                         <Text>レビューはまだありません</Text>
                     )}
-                    {props.reviews.map((review) => (
-                        <Box
-                            key={review.id}
-                            p={4}
-                            borderWidth={"1px"}
-                            borderRadius={"lg"}
-                            overflow={"hidden"}
-                            boxShadow={"lg"}
-                            mb={4}
-                        >
-                            <Text>{review.comment}</Text>
-                            <Text textAlign={"right"} mt={2} fontSize={"sm"}>
-                                {review.user.name}
-                            </Text>
-                            <HStack>
-                                {Array(5)
-                                    .fill("")
-                                    .map((_, i) => (
-                                        <StarIcon
-                                            key={i}
-                                            color={
-                                                i < review.rating
-                                                    ? "yellow.500"
-                                                    : "gray.300"
-                                            }
-                                        />
-                                    ))}
-                            </HStack>
-                        </Box>
-                    ))}
+                    <ReviewList reviews={props.reviews} />
                 </Box>
             </Box>
         </Box>
