@@ -16,8 +16,9 @@ import {
     MenuList,
     Text,
     useDisclosure,
+    VStack,
 } from "@chakra-ui/react";
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link as InertiaLink, Link, usePage } from "@inertiajs/react";
 import React from "react";
 
 const MainLayout = ({ children }) => {
@@ -36,52 +37,68 @@ const MainLayout = ({ children }) => {
                 placement="right"
                 onClose={onClose}
                 finalFocusRef={btnRef}
+                size={{ base: "xs", md: "sm" }}
             >
                 <DrawerOverlay />
                 <DrawerContent>
                     <DrawerCloseButton />
-                    <DrawerHeader>Create your account</DrawerHeader>
+                    <DrawerHeader>
+                        {auth.user
+                            ? `ようこそ ${auth.user.name}さん`
+                            : "ログイン"}
+                    </DrawerHeader>
 
                     <DrawerBody>
-                        {auth.user ? (
-                            <Link
-                                href={route("dashboard")}
-                                className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                        <VStack>
+                            {
+                                // ログインしていない場合
+                                !auth.user && (
+                                    <>
+                                        <Link
+                                            href={route("login")}
+                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                        >
+                                            Log in
+                                        </Link>
+                                        <Link
+                                            href={route("register")}
+                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                        >
+                                            Register
+                                        </Link>
+                                    </>
+                                )
+                            }
+                            <Box
+                                as={Link}
+                                pr={4}
+                                color="black"
+                                _hover={{ color: "gray.500" }}
                             >
-                                {auth.user.name}さん
-                            </Link>
-                        ) : (
-                            <>
-                                <Link
-                                    href={route("login")}
-                                    className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                                >
-                                    Log in
-                                </Link>
-                                <Link
-                                    href={route("register")}
-                                    className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                                >
-                                    Register
-                                </Link>
-                            </>
-                        )}
-                        <Box
-                            as={Link}
-                            pr={4}
-                            color="black"
-                            _hover={{ color: "gray.500" }}
-                        >
-                            マイページ
-                        </Box>
-                        <Box
-                            as={Link}
-                            href="#"
-                            color="black"
-                            _hover={{ color: "gray.500" }}
-                        >
-                            店舗の登録
-                        </Box>
+                                マイページ
+                            </Box>
+                            <Box
+                                as={Link}
+                                href="#"
+                                color="black"
+                                _hover={{ color: "gray.500" }}
+                            >
+                                店舗の登録
+                            </Box>
+                            <Box
+                                as={InertiaLink}
+                                method="post"
+                                href={route("logout")}
+                                onClick={() => {
+                                    onClose(); // drawerを閉じる
+                                }}
+                                color="black"
+                                _hover={{ color: "gray.500" }}
+                                cursor="pointer"
+                            >
+                                ログアウト
+                            </Box>
+                        </VStack>
                     </DrawerBody>
                 </DrawerContent>
             </Drawer>
