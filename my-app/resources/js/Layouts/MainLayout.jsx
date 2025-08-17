@@ -1,6 +1,12 @@
 import { AddIcon, HamburgerIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
     Box,
+    Drawer,
+    DrawerBody,
+    DrawerCloseButton,
+    DrawerContent,
+    DrawerHeader,
+    DrawerOverlay,
     Heading,
     HStack,
     IconButton,
@@ -9,16 +15,77 @@ import {
     MenuItem,
     MenuList,
     Text,
+    useDisclosure,
 } from "@chakra-ui/react";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
+import React from "react";
 
 const MainLayout = ({ children }) => {
+    const { auth } = usePage().props;
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const btnRef = React.useRef();
     return (
         <>
             <Head>
                 <title>{import.meta.env.VITE_APP_NAME}</title>
                 <meta name="description" content="laravel Inertia.js" />
             </Head>
+
+            <Drawer
+                isOpen={isOpen}
+                placement="right"
+                onClose={onClose}
+                finalFocusRef={btnRef}
+            >
+                <DrawerOverlay />
+                <DrawerContent>
+                    <DrawerCloseButton />
+                    <DrawerHeader>Create your account</DrawerHeader>
+
+                    <DrawerBody>
+                        {auth.user ? (
+                            <Link
+                                href={route("dashboard")}
+                                className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                            >
+                                {auth.user.name}さん
+                            </Link>
+                        ) : (
+                            <>
+                                <Link
+                                    href={route("login")}
+                                    className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                >
+                                    Log in
+                                </Link>
+                                <Link
+                                    href={route("register")}
+                                    className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                >
+                                    Register
+                                </Link>
+                            </>
+                        )}
+                        <Box
+                            as={Link}
+                            pr={4}
+                            color="black"
+                            _hover={{ color: "gray.500" }}
+                        >
+                            マイページ
+                        </Box>
+                        <Box
+                            as={Link}
+                            href="#"
+                            color="black"
+                            _hover={{ color: "gray.500" }}
+                        >
+                            店舗の登録
+                        </Box>
+                    </DrawerBody>
+                </DrawerContent>
+            </Drawer>
+
             <header>
                 <Box p={4} bg="orange.700">
                     <HStack
@@ -33,7 +100,7 @@ const MainLayout = ({ children }) => {
                         >
                             <Box
                                 as={Link}
-                                href="/home"
+                                href="/"
                                 color="white"
                                 _hover={{ color: "gray.300" }}
                             >
@@ -46,22 +113,44 @@ const MainLayout = ({ children }) => {
                             display={{ base: "none", md: "flex" }}
                             fontWeight={"bold"}
                         >
-                            <Box
-                                as={Link}
-                                pr={4}
-                                color="white"
-                                _hover={{ color: "gray.300" }}
-                            >
-                                マイページ
-                            </Box>
-                            <Box
-                                as={Link}
-                                href="#"
-                                color="white"
-                                _hover={{ color: "gray.300" }}
-                            >
-                                店舗の登録
-                            </Box>
+                            {auth.user ? (
+                                <>
+                                    <Box>
+                                        <Text
+                                            onClick={onOpen}
+                                            cursor={"pointer"}
+                                            color={"white"}
+                                            _hover={{ color: "gray.300" }}
+                                            ref={btnRef}
+                                            display={"flex"}
+                                            alignItems={"center"}
+                                        >
+                                            {auth.user.name}さん
+                                            <SettingsIcon mx={2} />
+                                        </Text>
+                                    </Box>
+                                </>
+                            ) : (
+                                <>
+                                    <Box
+                                        as={Link}
+                                        href="/login"
+                                        color="white"
+                                        _hover={{ color: "gray.300" }}
+                                        mr={4}
+                                    >
+                                        ログイン
+                                    </Box>
+                                    <Box
+                                        as={Link}
+                                        href="/register"
+                                        color="white"
+                                        _hover={{ color: "gray.300" }}
+                                    >
+                                        新規登録
+                                    </Box>
+                                </>
+                            )}
                         </HStack>
                         {/* スマホ表示 */}
                         <Box
