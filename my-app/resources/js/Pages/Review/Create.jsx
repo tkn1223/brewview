@@ -13,6 +13,7 @@ import {
     FormLabel,
     Heading,
     HStack,
+    Spinner,
     Text,
     Textarea,
     useDisclosure,
@@ -24,18 +25,22 @@ const Create = (props) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const cancelRef = useRef(null);
     const [hoverRating, setHoverRating] = useState(0);
+    const [loading, setLoading] = useState(false);
     const [values, setValues] = useState({
         shop_id: props.shop.id,
         rating: 1,
         comment: "",
     });
 
+    const handleCheck = (e) => {
+        e.preventDefault();
+        onOpen();
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // const isConfirm = window.confirm("投稿しますか？");
-        // if (!isConfirm) {
-        //     return;
-        // }
+        setLoading(true);
+        e.target.disabled = true;
         router.post(route("review.store"), values);
     };
 
@@ -75,8 +80,12 @@ const Create = (props) => {
                                     <Button ref={cancelRef} onClick={onClose}>
                                         キャンセル
                                     </Button>
-                                    <Button color="blue" ml={3}>
-                                        投稿する
+                                    <Button
+                                        colorScheme="blue"
+                                        ml={3}
+                                        onClick={handleSubmit}
+                                    >
+                                        {loading ? <Spinner /> : "投稿する"}
                                     </Button>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
@@ -90,7 +99,7 @@ const Create = (props) => {
             <Text fontSize={"xl"} mb={2} color={"gray.500"}>
                 {props.shop.name}
             </Text>
-            <form onSubmit={handleSubmit} mb={4}>
+            <form onSubmit={handleCheck} mb={4}>
                 <FormControl isRequired>
                     <FormLabel htmlFor="rating" fontWeight={"bold"}>
                         評価

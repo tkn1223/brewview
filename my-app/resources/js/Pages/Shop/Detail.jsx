@@ -1,10 +1,25 @@
 import ReviewList from "@/Components/Organisms/ReviewList";
 import MainLayout from "@/Layouts/MainLayout";
 import { PlusSquareIcon } from "@chakra-ui/icons";
-import { Box, Button, Heading, Image, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, Image, Text, useToast } from "@chakra-ui/react";
 import { Link } from "@inertiajs/react";
+import { useEffect } from "react";
 
 const Detail = (props) => {
+    const toast = useToast();
+    useEffect(() => {
+        if (props.status === "review_created") {
+            toast({
+                position: "bottom-right",
+                title: "投稿成功",
+                description: "レビューを投稿しました",
+                status: "success",
+                duration: 9000,
+                inClosable: true,
+            });
+        }
+    }, [props.status]);
+
     return (
         <Box p={4}>
             <Heading as="h2" size={"xl"} pb={4}>

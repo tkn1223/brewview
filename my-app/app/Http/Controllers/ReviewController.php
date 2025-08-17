@@ -20,6 +20,8 @@ class ReviewController extends Controller
     // 保存するときの一般的なメソッド名
     public function store(Request $request)
     {
+        $status = "error";
+
         $request->validate([
             'rating' => 'required|integer|between:1,5',
             'comment' => 'required|string|max:255',
@@ -28,6 +30,11 @@ class ReviewController extends Controller
         $reviewModel = new Review();
         $review = $reviewModel->saveReview($request);
 
-        return redirect()->route('shop.detail', ['id' => $request->shop_id]);
+        // トーストに使用するステータスを設定
+        if ($review) {
+            $status = 'review_created';
+        }
+
+        return redirect()->route('shop.detail', ['id' => $request->shop_id, 'status' => $status]);
     }
 }

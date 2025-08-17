@@ -32,6 +32,9 @@ class ShopController extends Controller
         // １つだけのデータ取得：find、すべてのデータ取得：get
         $shop = Shop::find($id);
 
+        // クエリパラメータからステータスを取得
+        $status = request("status");
+
         $reviews = Review::with('user')
             ->where('shop_id', $id)
             ->orderBy('created_at', 'desc')
@@ -40,6 +43,7 @@ class ShopController extends Controller
         return Inertia::render('Shop/Detail', [
             'shop' => $shop,
             'reviews' => $reviews,
+            'status' => $status,
         ]);
     }
 }
