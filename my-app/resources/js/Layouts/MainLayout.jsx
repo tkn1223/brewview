@@ -1,6 +1,7 @@
-import { AddIcon, HamburgerIcon, SettingsIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
     Box,
+    Button,
     Drawer,
     DrawerBody,
     DrawerCloseButton,
@@ -9,16 +10,12 @@ import {
     DrawerOverlay,
     Heading,
     HStack,
-    IconButton,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuList,
+    Link,
     Text,
     useDisclosure,
     VStack,
 } from "@chakra-ui/react";
-import { Head, Link as InertiaLink, Link, usePage } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import React from "react";
 
 const MainLayout = ({ children }) => {
@@ -50,10 +47,10 @@ const MainLayout = ({ children }) => {
 
                     <DrawerBody>
                         <VStack>
-                            {
-                                // ログインしていない場合
-                                !auth.user && (
-                                    <>
+                            {/* ログインしていない場合 */}
+                            {!auth.user && (
+                                <>
+                                    <VStack>
                                         <Link
                                             href={route("login")}
                                             className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
@@ -66,38 +63,41 @@ const MainLayout = ({ children }) => {
                                         >
                                             Register
                                         </Link>
-                                    </>
-                                )
-                            }
-                            <Box
-                                as={Link}
-                                pr={4}
-                                color="black"
-                                _hover={{ color: "gray.500" }}
-                            >
-                                マイページ
-                            </Box>
-                            <Box
-                                as={Link}
-                                href="#"
-                                color="black"
-                                _hover={{ color: "gray.500" }}
-                            >
-                                店舗の登録
-                            </Box>
-                            <Box
-                                as={InertiaLink}
-                                method="post"
-                                href={route("logout")}
-                                onClick={() => {
-                                    onClose(); // drawerを閉じる
-                                }}
-                                color="black"
-                                _hover={{ color: "gray.500" }}
-                                cursor="pointer"
-                            >
-                                ログアウト
-                            </Box>
+                                    </VStack>
+                                </>
+                            )}
+                            {/* ログインしている場合 */}
+                            {auth.user && (
+                                <Box display={"block"}>
+                                    <VStack>
+                                        <Link
+                                            href={route("dashboard")}
+                                            color="black"
+                                            _hover={{ color: "gray.500" }}
+                                        >
+                                            マイページ
+                                        </Link>
+                                        <Link
+                                            href={route("shop.index")}
+                                            color="black"
+                                            _hover={{ color: "gray.500" }}
+                                        >
+                                            店舗の登録
+                                        </Link>
+                                        <Link
+                                            href={route("logout")}
+                                            method="post"
+                                            onClick={() => {
+                                                onClose(); // drawerを閉じる
+                                            }}
+                                            color="black"
+                                            _hover={{ color: "gray.500" }}
+                                        >
+                                            ログアウト
+                                        </Link>
+                                    </VStack>
+                                </Box>
+                            )}
                         </VStack>
                     </DrawerBody>
                 </DrawerContent>
@@ -149,22 +149,35 @@ const MainLayout = ({ children }) => {
                                 </>
                             ) : (
                                 <>
-                                    <Box
-                                        as={Link}
-                                        href="/login"
-                                        color="white"
-                                        _hover={{ color: "gray.300" }}
-                                        mr={4}
-                                    >
-                                        ログイン
+                                    <Box>
+                                        <Link href={route("login")}>
+                                            <Button
+                                                color="white"
+                                                variant="outline"
+                                                _hover={{
+                                                    bg: "white",
+                                                    color: "orange.700",
+                                                }}
+                                                mr={4}
+                                            >
+                                                ログイン
+                                            </Button>
+                                        </Link>
                                     </Box>
-                                    <Box
-                                        as={Link}
-                                        href="/register"
-                                        color="white"
-                                        _hover={{ color: "gray.300" }}
-                                    >
-                                        新規登録
+                                    <Box>
+                                        <Link href={route("register")}>
+                                            <Button
+                                                bg="blue.500"
+                                                color="white"
+                                                variant="outline"
+                                                _hover={{
+                                                    bg: "blue.800",
+                                                    color: "white",
+                                                }}
+                                            >
+                                                新規登録
+                                            </Button>
+                                        </Link>
                                     </Box>
                                 </>
                             )}
@@ -174,7 +187,13 @@ const MainLayout = ({ children }) => {
                             display={{ base: "block", md: "none" }}
                             px={{ base: "4", md: "none" }}
                         >
-                            <Menu>
+                            <HamburgerIcon
+                                ref={btnRef}
+                                onClick={onOpen}
+                                cursor={"pointer"}
+                                fontSize={"xl"}
+                            />
+                            {/* <Menu>
                                 <MenuButton
                                     as={IconButton}
                                     aria-label="Options"
@@ -194,7 +213,7 @@ const MainLayout = ({ children }) => {
                                         店舗の登録
                                     </MenuItem>
                                 </MenuList>
-                            </Menu>
+                            </Menu> */}
                         </Box>
                     </HStack>
                 </Box>
