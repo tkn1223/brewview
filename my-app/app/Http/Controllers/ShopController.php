@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Nette\Utils\Random;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ShopImage;
 
 class ShopController extends Controller
 {
@@ -68,7 +69,7 @@ class ShopController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string',
-            'description' => 'requierd|string',
+            'description' => 'required|string',
         ]);
 
         // バルク（まとめて一括保存）を使用することでDBへのアクセス数を減らすことができる
@@ -81,7 +82,7 @@ class ShopController extends Controller
             // 店舗を保存
             $shop = $shopModel->saveShop([
                 'name' => $request->name,
-                'location' => $request->lobation,
+                'location' => $request->location,
                 'description' => $request->description,
                 'created_by' => $user->id,
                 'updated_by' => $user->id,
@@ -96,7 +97,8 @@ class ShopController extends Controller
                     $random = Random::generate(16);
                     // 画像の名前を生成
                     $fileName = $shop->id . '_' . $random . '.' . $extention;
-                    $shop -> saveImage([
+                    $shopImageModel = new ShopImage();
+                    $shopImage = $shopImageModel->saveImage([
                         'shop_id' => $shop->id,
                         'file_name' => $fileName,
                         'file_path' => 'storage/shop_images/' . $fileName,
@@ -106,6 +108,7 @@ class ShopController extends Controller
                         'file_mime' => $image->getClientMimeType(),
                         'file_original_name' => $image->getClientOriginalName(),
                         'file_original_path' => $image->getPathname(),
+                        'file_original_type' => $image->getClientOriginalExtension(),
                     ]);
                     $image->storeAs('public/shop_images', $fileName);
                 }

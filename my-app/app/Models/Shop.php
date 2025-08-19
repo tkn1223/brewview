@@ -31,11 +31,11 @@ class Shop extends Model
 
     public function saveShop($data)
     {
-        $this->name = $data->name;
-        $this->location = $data->location;
-        $this->description = $data->description;
-        $this->created_by = $data->created_by;
-        $this->updated_by = $data->updated_by;
+        $this->name = $data['name'];
+        $this->location = $data['location'];
+        $this->description = $data['description'];
+        $this->created_by = $data['created_by'];
+        $this->updated_by = $data['updated_by'];
         $this->save();
 
         return $this;
