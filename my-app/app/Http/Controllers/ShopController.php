@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Nette\Utils\Random;
+use Illuminate\Support\Facades\Auth;
 
 class ShopController extends Controller
 {
@@ -57,6 +58,11 @@ class ShopController extends Controller
 
     public function store(Request $request)
     {
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
         $status = "error";
 
         $request->validate([
@@ -74,6 +80,8 @@ class ShopController extends Controller
                 'name' => $request->name,
                 'location' => $request->lobation,
                 'description' => $request->description,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
             ]);
 
             if($request -> file('images')){
@@ -101,17 +109,13 @@ class ShopController extends Controller
             }
             // ここまでの処理すべてをコミットする
             DB::commit();
+            $status = 'shop-created';
         } catch(\Exception $e) {
             $message =$e->getMessage();
             Log::error($message);
             DB::rollBack();
             throw $e;
         }
-
-        if ($shop) {
-            $status = 'shop-created';
-        }
-
         return redirect()->route('shop.index', ['id' => $shop->id, 'status' => $status]);
     }
 }
