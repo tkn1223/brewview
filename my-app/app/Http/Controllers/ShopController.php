@@ -71,6 +71,9 @@ class ShopController extends Controller
             'description' => 'requierd|string',
         ]);
 
+        // バルク（まとめて一括保存）を使用することでDBへのアクセス数を減らすことができる
+        // 今後のアップデート内容
+
         // トランザクションを開始
         DB::beginTransaction();
         try {
