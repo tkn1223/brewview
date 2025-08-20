@@ -29,6 +29,12 @@ class Shop extends Model
         return $this->belongsTo(User::class);
     }
 
+    // shop_imagesテーブルとのリレーション
+    public function shopImages()
+    {
+        return $this->hasMany(ShopImage::class);
+    }
+
     public function saveShop($data)
     {
         $this->name = $data['name'];

@@ -5,8 +5,11 @@ import {
     FormControl,
     FormLabel,
     Heading,
+    HStack,
     Input,
+    Text,
     Textarea,
+    useToast,
 } from "@chakra-ui/react";
 import { router, useForm, usePage } from "@inertiajs/react";
 
@@ -18,6 +21,23 @@ const Create = () => {
         description: "",
         images: [],
     });
+
+    const toast = useToast();
+    const handleImageChange = (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length > 3) {
+            toast({
+                position: "bottom-right",
+                title: "画像は3枚までしかアップロードできません。",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+            });
+            e.target.value = "";
+            return;
+        }
+        setData("images", files);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -67,11 +87,32 @@ const Create = () => {
                 </FormControl>
                 <FormControl id="images" mb={4}>
                     <FormLabel fontWeight={"bold"}>店舗画像</FormLabel>
+                    {/* プレビュー */}
+                    {data.images.length > 0 && (
+                        <Box display={"flex"} p={4} bg={"gray.100"}>
+                            <HStack>
+                                <Text>プレビュー画面</Text>
+                            </HStack>
+                            <HStack>
+                                {data.images.map((image) => (
+                                    <Box key={image.name} p={2}>
+                                        <img
+                                            src={URL.createObjectURL(image)}
+                                            alt={image.name}
+                                            style={{ height: "100px" }}
+                                        />
+                                    </Box>
+                                ))}
+                            </HStack>
+                        </Box>
+                    )}
                     <Input
                         type="file"
                         id="images"
                         name="images"
-                        onChange={(e) => setData("images", e.target.files)}
+                        multiple
+                        accept=".jpg, .jpeg, .png"
+                        onChange={handleImageChange}
                     />
                 </FormControl>
                 <Button type="submit" colorScheme="teal">

@@ -25,13 +25,29 @@ const Detail = (props) => {
             <Heading as="h2" size={"xl"} pb={4}>
                 {props.shop.name}
             </Heading>
-            <Image
-                boxSize="300px"
-                objectFit="contain"
-                src="https://www.biz.ne.jp/sys/image.php?data=NpMPnIx5xd%2FCjA8rawKl1eDJL8Xa24KNkuGaLJ35tUvnOwKVposTmZ%2BMDFGLb8%2Bq"
-                alt={props.shop.name}
-                md={4}
-            />
+
+            {props.shop.shop_images ? (
+                props.shop.shop_images.map((image) => (
+                    <Image
+                        key={image.id}
+                        boxSize="300px"
+                        objectFit="contain"
+                        src={
+                            import.meta.env.VITE_APP_URL + "/" + image.file_path
+                        }
+                        alt={image.file_name}
+                        md={4}
+                    />
+                ))
+            ) : (
+                <Image
+                    boxSize="300px"
+                    objectFit="contain"
+                    src="https://www.biz.ne.jp/sys/image.php?data=NpMPnIx5xd%2FCjA8rawKl1eDJL8Xa24KNkuGaLJ35tUvnOwKVposTmZ%2BMDFGLb8%2Bq"
+                    alt={props.shop.name}
+                    md={4}
+                />
+            )}
             <Text mb={2}>{props.shop.description}</Text>
             <Text mb={2}>{props.shop.location}</Text>
             {/* レビュー */}

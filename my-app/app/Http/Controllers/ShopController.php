@@ -35,7 +35,7 @@ class ShopController extends Controller
     public function detail($id)
     {
         // １つだけのデータ取得：find、すべてのデータ取得：get
-        $shop = Shop::find($id);
+        $shop = Shop::with('shopImages')->find($id);
 
         // クエリパラメータからステータスを取得
         $status = request("status");
@@ -87,7 +87,7 @@ class ShopController extends Controller
                 'created_by' => $user->id,
                 'updated_by' => $user->id,
             ]);
-
+            
             if($request -> file('images')){
                 $images = $request->file('images');
                 foreach($images as $image){
@@ -97,8 +97,9 @@ class ShopController extends Controller
                     $random = Random::generate(16);
                     // 画像の名前を生成
                     $fileName = $shop->id . '_' . $random . '.' . $extention;
+
                     $shopImageModel = new ShopImage();
-                    $shopImage = $shopImageModel->saveImage([
+                    $shopImageModel->saveImage([
                         'shop_id' => $shop->id,
                         'file_name' => $fileName,
                         'file_path' => 'storage/shop_images/' . $fileName,
