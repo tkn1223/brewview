@@ -16,7 +16,8 @@ class ShopController extends Controller
 {
     public function index()
     {
-        // $shops = Shop::all();
+        $status = request("status");
+
         $shops = Shop::with('reviews')->get();
         // dd($shops); デバックのコマンド
 
@@ -29,6 +30,7 @@ class ShopController extends Controller
         return Inertia::render('Home', [
             'shops' => $shops,
             'newReviews' => $newReviews,
+            'status' => $status,
         ]);
     }
 
@@ -123,6 +125,7 @@ class ShopController extends Controller
             DB::rollBack();
             throw $e;
         }
-        return redirect()->route('shop.index', ['id' => $shop->id, 'status' => $status]);
+        return redirect()->route('shop.index', ['id' => $shop->id])
+            ->with('success', '店舗を登録しました');
     }
 }

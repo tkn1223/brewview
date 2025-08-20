@@ -8,6 +8,18 @@ import { useEffect } from "react";
 const Detail = (props) => {
     const toast = useToast();
     useEffect(() => {
+        // セッションフラッシュメッセージを処理
+        if (props.flash?.success) {
+            toast({
+                position: "bottom-right",
+                title: "成功",
+                description: props.flash.success,
+                status: "success",
+                duration: 9000,
+                inClosable: true,
+            });
+        }
+
         if (props.status === "review_created") {
             toast({
                 position: "bottom-right",
@@ -18,7 +30,7 @@ const Detail = (props) => {
                 inClosable: true,
             });
         }
-    }, [props.status]);
+    }, [props.flash, props.status]);
 
     return (
         <Box p={4}>

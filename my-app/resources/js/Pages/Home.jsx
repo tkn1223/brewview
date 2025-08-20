@@ -1,9 +1,34 @@
 import ReviewList from "@/Components/Organisms/ReviewList";
 import MainLayout from "@/Layouts/MainLayout";
-import { Box, Heading, HStack, Image, Text, VStack } from "@chakra-ui/react";
+import {
+    Box,
+    Heading,
+    HStack,
+    Image,
+    Text,
+    useToast,
+    VStack,
+} from "@chakra-ui/react";
 import { Link } from "@inertiajs/react";
+import { useEffect } from "react";
 
 const Home = (props) => {
+    const toast = useToast();
+
+    useEffect(() => {
+        // セッションフラッシュメッセージを処理
+        if (props.flash?.success) {
+            console.log("Showing success toast:", props.flash.success);
+            toast({
+                position: "bottom-right",
+                title: "成功",
+                description: props.flash.success,
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    }, [props.flash]);
     return (
         <>
             <Box p={4}>
