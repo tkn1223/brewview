@@ -31,6 +31,10 @@ class Review extends Model
     // レビューを保存するメソッド
     public function saveReview($request)
     {
+        if (!$request->shop_id) {
+            throw new \Exception('shop_id is required');
+        }
+
         $this->shop_id = $request->shop_id;
         $this->user_id = 1; // 仮でユーザーIDを1にしている
         $this->rating = $request->rating;
@@ -38,5 +42,16 @@ class Review extends Model
         $this->save();
 
         return $this;
+    }
+
+    // レビューの更新
+    public function updateReview($request)
+    {
+        $review = $this->find($request->review_id);
+        $review->rating = $request->rating;
+        $review->comment = $request->comment;
+        $review->save();
+
+        return $review;
     }
 }

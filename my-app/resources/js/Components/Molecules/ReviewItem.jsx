@@ -1,6 +1,7 @@
 import StarRating from "@/Components/Atoms/StarRating";
 import UserName from "@/Components/Atoms/UserName";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
+import { Link } from "@inertiajs/react";
 
 const ReviewItem = ({ review }) => {
     return (
@@ -16,6 +17,13 @@ const ReviewItem = ({ review }) => {
             <Text>{review.comment}</Text>
             <UserName name={review.user.name} />
             <StarRating rating={review.rating} />
+            <Box mt={3} w={"100%"} display={"flex"} justifyContent={"flex-end"}>
+                <Link href={`/review/edit/${review.id}`}>
+                    <Button colorScheme="blue" size={"sm"}>
+                        編集
+                    </Button>
+                </Link>
+            </Box>
         </Box>
     );
 };

@@ -18,7 +18,6 @@ const Home = (props) => {
     useEffect(() => {
         // セッションフラッシュメッセージを処理
         if (props.flash?.success) {
-            console.log("Showing success toast:", props.flash.success);
             toast({
                 position: "bottom-right",
                 title: "成功",
