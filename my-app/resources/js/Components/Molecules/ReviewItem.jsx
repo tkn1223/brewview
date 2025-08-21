@@ -14,7 +14,7 @@ const ReviewItem = ({ review }) => {
             boxShadow={"lg"}
             mb={4}
         >
-            <Text>{review.comment}</Text>
+            <Text style={{ whiteSpace: "pre-wrap" }}>{review.comment}</Text>
             <UserName name={review.user.name} />
             <StarRating rating={review.rating} />
             <Box mt={3} w={"100%"} display={"flex"} justifyContent={"flex-end"}>
