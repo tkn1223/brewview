@@ -29,6 +29,15 @@ const Detail = (props) => {
                 duration: 9000,
                 inClosable: true,
             });
+        } else if (props.status === "review_deleted") {
+            toast({
+                position: "bottom-right",
+                title: "レビュー削除成功",
+                description: "レビューの削除が完了しました",
+                status: "info",
+                duration: 9000,
+                inClosable: true,
+            });
         }
     }, [props.flash, props.status]);
 
