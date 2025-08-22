@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Review;
 use Inertia\Inertia;
 use App\Models\Shop;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -20,6 +21,7 @@ class ReviewController extends Controller
     // 保存するときの一般的なメソッド名
     public function store(Request $request)
     {
+        $user = Auth::user();
         $status = "error";
 
         $request->validate([
@@ -28,7 +30,12 @@ class ReviewController extends Controller
         ]);
 
         $reviewModel = new Review();
-        $review = $reviewModel->saveReview($request);
+        $review = $reviewModel->saveReview([
+            'shop_id' => $request->shop_id,
+            'user_id' => $user->id,
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
 
         // トーストに使用するステータスを設定
         if ($review) {
