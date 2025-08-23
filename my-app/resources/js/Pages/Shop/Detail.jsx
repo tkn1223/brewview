@@ -1,7 +1,15 @@
 import ReviewList from "@/Components/Organisms/ReviewList";
 import MainLayout from "@/Layouts/MainLayout";
-import { PlusSquareIcon } from "@chakra-ui/icons";
-import { Box, Button, Heading, Image, Text, useToast } from "@chakra-ui/react";
+import { EditIcon, PlusSquareIcon } from "@chakra-ui/icons";
+import {
+    Box,
+    Button,
+    Heading,
+    HStack,
+    Image,
+    Text,
+    useToast,
+} from "@chakra-ui/react";
 import { Link } from "@inertiajs/react";
 import { useEffect } from "react";
 
@@ -43,9 +51,16 @@ const Detail = (props) => {
 
     return (
         <Box p={4}>
-            <Heading as="h2" size={"xl"} pb={4}>
-                {props.shop.name}
-            </Heading>
+            <HStack spacing={4}>
+                <Heading as="h2" size={"xl"} pb={4}>
+                    {props.shop.name}
+                </Heading>
+                <Link href={route("shop.edit", { id: props.shop.id })}>
+                    <Button p={2} borderRadius={10} bg={"gray.200"}>
+                        <EditIcon />
+                    </Button>
+                </Link>
+            </HStack>
 
             {props.shop.shop_images ? (
                 props.shop.shop_images.map((image) => (

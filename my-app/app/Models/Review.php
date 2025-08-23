@@ -47,6 +47,7 @@ class Review extends Model
     // レビューの更新
     public function updateReview($request)
     {
+        dd($request->all());
         $review = $this->find($request->review_id);
         $review->rating = $request->rating;
         $review->comment = $request->comment;

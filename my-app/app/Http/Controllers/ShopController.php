@@ -19,8 +19,6 @@ class ShopController extends Controller
         $status = request("status");
 
         $shops = Shop::with('reviews')->get();
-        // dd($shops); デバックのコマンド
-
         // 新着のレビューを5件取得
         $newReviews = Review::with('shop', 'user')
         ->orderBy('created_at', 'desc')
@@ -150,7 +148,6 @@ class ShopController extends Controller
         DB::beginTransaction();
 
         try{
-            
             $ShopModel = new Shop();
             $shop = $ShopModel->updateShop([
                 'id' => $request->id,
@@ -209,15 +206,12 @@ class ShopController extends Controller
         DB::beginTransaction();
 
         try{
+            // レビューを削除
+            Review::where('shop_id', $id)->delete();
+            // 店舗の画像を削除
+            ShopImage::where('shop_id', $id)->delete();
             // 店舗を削除
             $shop->delete();
-
-            // 店舗の画像を削除
-            $shopImages = ShopImage::where('shop_id', $id)->get();
-            foreach($shopImages as $shopImage) {
-                $shopImage->delete();
-            }
-            
 
             DB::commit();
             $status = 'shop-deleted';
@@ -227,5 +221,6 @@ class ShopController extends Controller
             DB::rollBack();
             throw $e;
         }
+        return redirect()->route('shop.index', ['status' => $status]);
     }
 }
