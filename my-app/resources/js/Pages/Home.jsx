@@ -56,6 +56,16 @@ const Home = (props) => {
         }, 500);
     };
 
+    const handlePageChane = (url) => {
+        router.get(url);
+    };
+
+    const getButtonLabel = (label) => {
+        if (label.includes("previous")) return "前へ";
+        if (label.includes("next")) return "次へ";
+        return label;
+    };
+
     return (
         <>
             <Box p={4}>
@@ -84,7 +94,7 @@ const Home = (props) => {
                     </Box>
                 )}
                 <VStack spacing={4} align="{stretch}">
-                    {props.shops.map((shop) => (
+                    {props.shops.data.map((shop) => (
                         <Link href={`/shop/${shop.id}`} key={shop.id}>
                             <Box
                                 key={shop.id}
@@ -133,6 +143,18 @@ const Home = (props) => {
                             </Box>
                         </Link>
                     ))}
+                    <HStack justifyContent={"center"} alignItems={"center"}>
+                        {props.shops.links.map((link, index) => (
+                            <Button
+                                key={index}
+                                onClick={() => handlePageChane(link.url)}
+                                colorScheme={link.active ? "blue" : "gray"}
+                                isDisabled={!link.url}
+                            >
+                                {getButtonLabel(link.label)}
+                            </Button>
+                        ))}
+                    </HStack>
                 </VStack>
                 <Heading
                     fontSize={{ base: "24px", md: "30px", lg: "40px" }}

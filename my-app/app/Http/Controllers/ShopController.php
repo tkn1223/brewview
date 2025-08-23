@@ -28,11 +28,10 @@ class ShopController extends Controller
             $search = $request->search;
             $query->where('name', 'like', '%' . $search . '%')
                   ->orWhere('location', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%')
-                  ->get();
+                  ->orWhere('description', 'like', '%' . $search . '%');
         }
 
-        $shops = $query->get();
+        $shops = $query->paginate(10);
 
         // 新着のレビューを5件取得
         $newReviews = Review::with('shop', 'user')
