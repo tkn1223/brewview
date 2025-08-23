@@ -1,54 +1,140 @@
-# BrewView Project
+# BrewView ☕
 
-## 💻 使用技術
+## プロジェクト概要
 
-- php 8.3
-- larvel 11 系
-- ChakuraUI
-- JavaScript ES6 系以降
-- React 18 系
-- vite
-- nginx
-- docker
+BrewView は、飲食店やカフェなどの店舗情報を管理し、ユーザーがレビューを投稿できる Web アプリケーションです。<br>
+店舗の登録・編集・削除、レビューの投稿・編集・削除、検索機能などを提供し、お気に入りの店舗を見つけて共有するためのプラットフォームです。
 
-## 🏗️ プロジェクト構成
+## 主要機能
 
-### ディレクトリ構造
+### 🏪 店舗管理
 
+- **店舗登録**: 店舗名、場所、説明、画像の登録
+- **店舗編集**: 既存店舗情報の更新
+- **店舗削除**: 店舗と関連データ（レビュー、画像）の削除
+- **店舗一覧**: ページネーション付きの店舗リスト表示
+- **店舗詳細**: 店舗情報とレビューの詳細表示
+
+### ⭐ レビューシステム
+
+- **レビュー投稿**: 1-5 段階の評価とコメント
+- **レビュー編集**: 投稿したレビューの更新
+- **レビュー削除**: 自分のレビューの削除
+- **平均評価**: 店舗ごとのレビュー平均レーティング表示
+
+### 🔍 検索・フィルタリング
+
+- **店舗検索**: 店舗名、場所、説明でのキーワード検索
+- **ページネーション**: 大量データの効率的な表示
+
+### 👤 ユーザー管理
+
+- **認証システム**: Laravel Breeze によるログイン・登録
+- **プロフィール管理**: ユーザー情報の編集
+- **権限管理**: 認証済みユーザーのみが店舗・レビューを投稿
+
+## 技術スタック詳細
+
+### バックエンド
+
+- **PHP 8.3**
+- **Laravel 12**
+- **MariaDB**
+- **Eloquent ORM**
+- **Inertia.js**
+
+### フロントエンド
+
+- **React 18**
+- **Chakra UI**
+- **Tailwind CSS**
+- **Vite**
+
+### インフラ・開発環境
+
+- **Docker**
+- **Nginx**
+- **PHP-FPM**
+- **MariaDB**
+
+### 主要パッケージ
+
+- **Laravel Sanctum**: API 認証
+- **Ziggy**: ルート名から URL 生成
+- **Faker**: テストデータ生成
+
+## データベース設計
+
+### 主要テーブル
+
+- **users**: ユーザー情報
+- **shops**: 店舗情報（作成者、更新者情報付き）
+- **reviews**: レビュー情報（店舗 ID、ユーザー ID、評価、コメント）
+- **shop_images**: 店舗画像情報
+
+### リレーション
+
+- ユーザー ↔ 店舗（作成・更新）
+- 店舗 ↔ レビュー（1 対多）
+- 店舗 ↔ 画像（1 対多）
+
+## セットアップ手順
+
+### 1. Docker 環境の起動
+
+```bash
+# Docker Composeで環境を起動
+docker-compose up
 ```
-brewview/                       # プロジェクトルート
-├── .gitignore                  # Git除外設定
-├── docker-compose.yml          # Docker Compose設定
-├── docker-config/              # Docker設定ファイル
-│   ├── php/                    # PHPコンテナ設定
-│   │   ├── Dockerfile          # PHP 8.3 + FPM
-│   │   └── php.ini             # PHP設定
-│   ├── nginx/                  # Nginx設定
-│   │   ├── Dockerfile          # Nginxコンテナ
-│   │   └── default.conf        # Nginx設定
-│   └── mariadb/                # MariaDB設定
-│       └── data/               # データベースデータ（Git除外）
-├── my-app/                     # Laravel v12.0.0 アプリケーション
-│   ├── app/                    # アプリケーションロジック
-│   ├── bootstrap/              # ブートストラップ
-│   │   └── cache/              # キャッシュ（Git除外）
-│   ├── config/                 # 設定ファイル
-│   ├── database/               # データベース関連
-│   ├── public/                 # 公開ファイル
-│   ├── resources/              # リソースファイル
-│   ├── routes/                 # ルート定義
-│   ├── storage/                # ストレージ
-│   │   ├── app/                # アプリケーションファイル
-│   │   ├── framework/          # フレームワーク
-│   │   │   ├── cache/          # キャッシュ（Git除外）
-│   │   │   ├── sessions/       # セッション（Git除外）
-│   │   │   ├── testing/        # テスト用
-│   │   │   └── views/          # ビューキャッシュ（Git除外）
-│   │   └── logs/               # ログファイル（Git除外）
-│   ├── tests/                  # テストファイル
-│   ├── vendor/                 # Composer依存関係（Git除外）
-│   ├── composer.json           # Composer設定
-│   ├── package.json            # Node.js設定
-│   └── artisan                 # Laravelコマンド
-└── README.md                   # このファイル
+
+### 3. データベース設定
+
+```bash
+# Laravelコンテナに入る
+docker-compose exec web bash
+
+# マイグレーション実行
+php artisan migrate
+
+# シーダー実行（オプション）
+php artisan db:seed
 ```
+
+### 4. フロントエンドのサーバー起動
+
+```bash
+npm run dev
+```
+
+## アプリケーション構造
+
+### コントローラー
+
+- **ShopController**: 店舗の CRUD 操作、検索、ページネーション
+- **ReviewController**: レビューの CRUD 操作
+- **ProfileController**: ユーザープロフィール管理
+
+### モデル
+
+- **Shop**: 店舗情報とリレーション
+- **Review**: レビュー情報
+- **ShopImage**: 店舗画像管理
+- **User**: ユーザー情報
+
+### ページコンポーネント
+
+- **Home.jsx**: 店舗一覧、検索、ページネーション
+- **Shop/**: 店舗作成、編集、詳細表示
+- **Review/**: レビュー作成、編集
+- **Auth/**: 認証関連ページ
+
+## 最後に
+
+このプロジェクトは、laravel×React の開発手法を学ぶため、Youtuber もんしょーさんより配信いただいている
+
+[【この 1 本で完結】 Laravel と React 入門基礎マスター講座](https://youtu.be/humnThHNjLU?si=itRgKPj0rb6WpiOc)
+
+を参考に開発したプロジェクトです。<br>
+
+無料公開の動画でありながら大変丁寧に解説をしてきただき、学習の大きな参考となりました。<br>
+この場をお借りしてお礼申し上げます。
