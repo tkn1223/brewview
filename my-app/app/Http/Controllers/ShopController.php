@@ -53,6 +53,10 @@ class ShopController extends Controller
         // クエリパラメータからステータスを取得
         $status = request("status");
 
+        // 作成者と更新者のユーザーデータを取得
+        $createdUser = User::find($shop->created_by);
+        $updatedUser = User::find($shop->updated_by);
+
         $reviews = Review::with('user')
             ->where('shop_id', $id)
             ->orderBy('created_at', 'desc')
@@ -62,6 +66,8 @@ class ShopController extends Controller
             'shop' => $shop,
             'reviews' => $reviews,
             'status' => $status,
+            'createdUser' => $createdUser,
+            'updatedUser' => $updatedUser,
         ]);
     }
 

@@ -83,14 +83,52 @@ const Detail = (props) => {
                 </Link>
             </HStack>
 
+            <Box>
+                <Text>
+                    {props.createdUser ? (
+                        <Text as="span" fontSize={{ base: 12, md: 16 }}>
+                            <Link
+                                color={"blue.500"}
+                                href={route("shop.index.user", {
+                                    userId: props.createdUser.id,
+                                })}
+                            >
+                                作成者：{props.createdUser.name}さん
+                            </Link>
+                        </Text>
+                    ) : (
+                        <Text as="span" fontSize={{ base: 12, md: 16 }}>
+                            作成者： 不明
+                        </Text>
+                    )}
+                    <br />
+                    {props.updatedUser ? (
+                        <Text as="span" fontSize={{ base: 12, md: 16 }}>
+                            <Link
+                                color={"bleu.500"}
+                                href={route("shop.index.user", {
+                                    userId: props.updatedUser.id,
+                                })}
+                            >
+                                更新者： {props.updatedUser.name}さん
+                            </Link>
+                        </Text>
+                    ) : (
+                        <Text as="span" fontSize={{ base: 12, md: 16 }}>
+                            更新者： なし
+                        </Text>
+                    )}
+                </Text>
+            </Box>
+
             {props.shop.shop_images ? (
                 <Box w={300}>
                     <Splide
                         options={options}
-                        aria-lavelledby="autoplay-example-heading"
+                        aria-labelledby="autoplay-example-heading"
                     >
                         {props.shop.shop_images.map((image) => (
-                            <SplideSlide>
+                            <SplideSlide key={image.id}>
                                 <Image
                                     key={image.id}
                                     boxSize="300px"
