@@ -41,6 +41,15 @@ const Home = (props) => {
                 duration: 9000,
                 inClosable: true,
             });
+        } else if (props.status === "error") {
+            toast({
+                position: "bottom-right",
+                title: "アクセスエラー",
+                description: "アクセス権限がありません",
+                status: "error",
+                duration: 9000,
+                inClosable: true,
+            });
         }
     }, [props.flash]);
 
@@ -111,12 +120,21 @@ const Home = (props) => {
                                 transition="all 0.2s"
                             >
                                 <HStack spacing={4}>
-                                    <Image
-                                        boxSize="100px"
-                                        objectFit="cover"
-                                        src="https://www.biz.ne.jp/sys/image.php?data=NpMPnIx5xd%2FCjA8rawKl1eDJL8Xa24KNkuGaLJ35tUvnOwKVposTmZ%2BMDFGLb8%2Bq"
-                                        alt={shop.name}
-                                    />
+                                    {shop.shop_images.length > 0 ? (
+                                        <Image
+                                            boxSize="100px"
+                                            objectFit="cover"
+                                            src={shop.shop_images[0].file_path}
+                                            alt={shop.shop_images[0].file_name}
+                                        />
+                                    ) : (
+                                        <Image
+                                            boxSize="100px"
+                                            objectFit="cover"
+                                            src="https://www.biz.ne.jp/sys/image.php?data=NpMPnIx5xd%2FCjA8rawKl1eDJL8Xa24KNkuGaLJ35tUvnOwKVposTmZ%2BMDFGLb8%2Bq"
+                                            alt={shop.name}
+                                        />
+                                    )}
                                     <VStack align={"start"}>
                                         <Heading as="h3" size="md">
                                             {shop.name}

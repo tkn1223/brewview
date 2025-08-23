@@ -19,14 +19,15 @@ class ShopController extends Controller
     {
         $status = request("status");
 
-        $query = Shop::with('reviews')
+        $query = Shop::with('reviews', 'shopImages')
         ->withCount('reviews')
         ->withAvg('reviews', 'rating');
 
         // 検索条件がある場合
         if($request->has('search')){
             $search = $request->search;
-            $query->where('name', 'like', '%' . $search . '%')
+            $query->with('reviews', 'shopImages')
+                  ->where('name', 'like', '%' . $search . '%')
                   ->orWhere('location', 'like', '%' . $search . '%')
                   ->orWhere('description', 'like', '%' . $search . '%');
         }

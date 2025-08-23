@@ -62,6 +62,16 @@ class ReviewController extends Controller
     public function edit($id)
     {
         $review = Review::with('shop')->find($id);
+
+        // ログインユーザーとレビューのユーザーが一致しない場合ははじく
+        // policyを利用することで実装も可能
+        $user = Auth::user();
+        if ($user->id !== $review->user_id) {
+            return redirect()->route('shop.index', [
+                'status' => 'error',
+            ]);
+        }
+
         return Inertia::render('Review/Edit',[
             'review' => $review,
         ]);
