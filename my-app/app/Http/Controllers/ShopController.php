@@ -15,16 +15,29 @@ use App\Models\ShopImage;
 
 class ShopController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $status = request("status");
 
-        $shops = Shop::with('reviews')->get();
+        $query = Shop::with('reviews');
+
+        // 検索条件がある場合
+        if($request->has('search')){
+            $search = $request->search;
+            $query->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('location', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%')
+                  ->get();
+        }
+
+        $shops = $query->get();
+
         // 新着のレビューを5件取得
         $newReviews = Review::with('shop', 'user')
         ->orderBy('created_at', 'desc')
         ->take(5)
         ->get();
+
 
         return Inertia::render('Home', [
             'shops' => $shops,

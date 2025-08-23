@@ -2,18 +2,23 @@ import ReviewList from "@/Components/Organisms/ReviewList";
 import MainLayout from "@/Layouts/MainLayout";
 import {
     Box,
+    Button,
     Heading,
     HStack,
     Image,
+    Input,
+    Spinner,
     Text,
     useToast,
     VStack,
 } from "@chakra-ui/react";
-import { Link } from "@inertiajs/react";
-import { useEffect } from "react";
+import { Link, router } from "@inertiajs/react";
+import { useEffect, useState } from "react";
 
 const Home = (props) => {
     const toast = useToast();
+    const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         // セッションフラッシュメッセージを処理
@@ -37,6 +42,19 @@ const Home = (props) => {
             });
         }
     }, [props.flash]);
+
+    const handleSearch = (e) => {
+        setLoading(true);
+        e.preventDefault();
+        const newSearch = document.getElementById("search").value;
+        setSearch(newSearch);
+
+        setTimeout(() => {
+            setLoading(false);
+            router.get(route("shop.index"), { search: newSearch });
+        }, 500);
+    };
+
     return (
         <>
             <Box p={4}>
@@ -47,6 +65,23 @@ const Home = (props) => {
                 >
                     ショップ一覧
                 </Heading>
+                <HStack spacing={4} mb={4}>
+                    <Input
+                        name="search"
+                        id="search"
+                        placeholde="検索..."
+                    ></Input>
+                    <Button onClick={handleSearch}>検索</Button>
+                </HStack>
+                {loading && (
+                    <Box
+                        display={"flex"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                    >
+                        <Spinner size={"xl"} />
+                    </Box>
+                )}
                 <VStack spacing={4} align="{stretch}">
                     {props.shops.map((shop) => (
                         <Link href={`/shop/${shop.id}`} key={shop.id}>
