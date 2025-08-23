@@ -19,7 +19,9 @@ class ShopController extends Controller
     {
         $status = request("status");
 
-        $query = Shop::with('reviews');
+        $query = Shop::with('reviews')
+        ->withCount('reviews')
+        ->withAvg('reviews', 'rating');
 
         // 検索条件がある場合
         if($request->has('search')){

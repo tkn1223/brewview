@@ -1,3 +1,4 @@
+import StarRating from "@/Components/Atoms/StarRating";
 import ReviewList from "@/Components/Organisms/ReviewList";
 import MainLayout from "@/Layouts/MainLayout";
 import {
@@ -111,6 +112,22 @@ const Home = (props) => {
                                             {shop.name}
                                         </Heading>
                                         <Text>{shop.description}</Text>
+                                        <VStack>
+                                            <HStack>
+                                                <Text>レビュー平均：</Text>
+                                                <StarRating
+                                                    rating={
+                                                        shop.reviews_avg_rating
+                                                    }
+                                                />
+                                                <Text
+                                                    fontSize={"sm"}
+                                                    color={"gray.500"}
+                                                >
+                                                    ({shop.reviews_count}件)
+                                                </Text>
+                                            </HStack>
+                                        </VStack>
                                     </VStack>
                                 </HStack>
                             </Box>
