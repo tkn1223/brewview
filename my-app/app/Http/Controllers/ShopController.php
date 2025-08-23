@@ -59,11 +59,6 @@ class ShopController extends Controller
 
     public function store(Request $request)
     {
-        $user = Auth::user();
-        if (!$user) {
-            return redirect()->route('login');
-        }
-
         $status = "error";
 
         $request->validate([
@@ -84,8 +79,8 @@ class ShopController extends Controller
                 'name' => $request->name,
                 'location' => $request->location,
                 'description' => $request->description,
-                'created_by' => $user->id,
-                'updated_by' => $user->id,
+                'created_by' => Auth::id(),
+                'updated_by' => Auth::id(),
             ]);
             
             if($request -> file('images')){
@@ -156,6 +151,28 @@ class ShopController extends Controller
                 'description' => $request->description,
                 'updated_by' => Auth::id(),
             ]);
+
+            // 既存の店舗画像を削除
+            if($request->has('existingImages'))
+            {
+                // 既存の画像情報を取得
+                $existingImages = $request->existingImages;
+                // 既存の画像IDのみを取得
+                $existingImageIds = array_column($existingImages, 'id');
+
+                // DBに保存済みの画像IDを取得
+                $arrayShopImageIds = DB::table('shop_images')->where('shop_id', $shop->id)->get(['id'])->toArray();
+                // 配列のキーをidに変換
+                $shopImageIds = array_column($arrayShopImageIds, 'id');
+
+                // 既存の画像IDと新しい画像IDの差分を取得
+                $deleteImageIds = array_diff($shopImageIds, $existingImageIds);
+
+                if(count($deleteImageIds) > 0) {
+                    DB::table('shop_images')->whereIn('id', $deleteImageIds)->delete();
+                }
+            }
+
 
             if($request -> file('images')){
                 $images = $request->file('images');
