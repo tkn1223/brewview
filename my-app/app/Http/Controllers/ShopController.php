@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Shop;
+use App\Models\User;
 use App\Models\Review;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,18 @@ class ShopController extends Controller
             'shops' => $shops,
             'newReviews' => $newReviews,
             'status' => $status,
+        ]);
+    }
+
+    public function indexByUser($userId)
+    {
+        $user = User::find($userId);
+
+        $shops = Shop::with('shopImages')
+        ->where('created_by', $userId)->orWhere('updated_by', $userId)->get();
+        return Inertia::render('Shop/IndexByUser', [
+            'shops' => $shops,
+            'user' => $user,
         ]);
     }
 

@@ -5,11 +5,25 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Review;
 use Inertia\Inertia;
+use App\Models\User;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
+    public function indexByUser($userId)
+    {
+        $user = User::find($userId);
+        
+        $reviews = Review::with('shop', 'user')
+        ->where('user_id', $userId)
+        ->get();
+        return Inertia::render('Review/IndexByUser', [
+            'user' => $user,
+            'reviews' => $reviews,
+        ]);
+    }
+
     public function create($id)
     {
         $shop = Shop::find($id);

@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/shop/destroy/{id}', [ShopController::class, 'destroy'])->name('shop.destroy');
 });
 Route::get('/shop/{id}', [ShopController::class, 'detail'])->name('shop.detail');
+Route::get('/shop/user/{userId}', [ShopController::class, 'indexByUser'])->name('shop.index.user');
 
 // Review
 Route::middleware('auth')->group(function () {
@@ -49,5 +50,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/review/update', [ReviewController::class, 'update'])->name('review.update');
     Route::delete('/review/destroy/{id}', [ReviewController::class, 'destroy'])->name('review.destroy');
 });
+Route::get('/review/user/{userId}', [ReviewController::class, 'indexByUser'])->name('review.index.user');
 
 require __DIR__.'/auth.php';
