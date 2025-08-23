@@ -75,7 +75,7 @@ const MainLayout = ({ children }) => {
                                             color="black"
                                             _hover={{ color: "gray.500" }}
                                         >
-                                            マイページ
+                                            ダッシュボード
                                         </Link>
                                         <Link
                                             href={route("shop.create")}
