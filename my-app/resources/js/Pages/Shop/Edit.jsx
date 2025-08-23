@@ -1,4 +1,5 @@
 import MainLayout from "@/Layouts/MainLayout";
+import { CloseIcon, IconButton } from "@chakra-ui/icons";
 import {
     Box,
     Button,
@@ -14,18 +15,28 @@ import {
 import { router, useForm } from "@inertiajs/react";
 
 const Edit = (props) => {
+    const existingImages = props.shop.shop_images
+        ? props.shop.shop_images.map((image) => ({
+              id: image.id,
+              file_name: image.file_name,
+              location: props.shop.location,
+              file_path: image.file_path,
+          }))
+        : [];
+
     const { data, setData, post, errors } = useForm({
         id: props.shop.id,
         name: props.shop.name,
         location: props.shop.location,
         description: props.shop.description,
         images: [],
+        existingImages: existingImages,
     });
 
     const toast = useToast();
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
-        if (files.length > 3) {
+        if (files.length + data.existingImages.length > 3) {
             toast({
                 position: "bottom-right",
                 title: "画像は3枚までしかアップロードできません。",
@@ -47,6 +58,32 @@ const Edit = (props) => {
     const handleDelete = (e) => {
         e.preventDefault();
         router.delete(route("shop.destroy", { id: data.id }));
+    };
+
+    const handleRemoveImage = (index, type) => {
+        if (type === "existing") {
+            return (e) => {
+                const images = data.existingImages;
+                images.splice(index, 1);
+                setData("existingImages", images);
+            };
+        } else {
+            return (e) => {
+                const images = data.images;
+                images.splice(index, 1);
+                setData("images", images);
+
+                const dataTransfer = new DataTransfer();
+                const imageFiles = document.getElementById("images").files;
+
+                Array.from(imageFiles).forEach((file, i) => {
+                    if (i !== index) {
+                        dataTransfer.items.add(file);
+                    }
+                });
+                document.getElementById("images").file = dataTransfer.files;
+            };
+        }
     };
 
     return (
@@ -88,25 +125,85 @@ const Edit = (props) => {
                 </FormControl>
                 <FormControl id="images" mb={4}>
                     <FormLabel fontWeight={"bold"}>店舗画像</FormLabel>
-                    {/* プレビュー */}
-                    {data.images.length > 0 && (
-                        <Box display={"flex"} p={4} bg={"gray.100"}>
-                            <HStack>
-                                <Text>プレビュー画面</Text>
-                            </HStack>
-                            <HStack>
-                                {data.images.map((image) => (
-                                    <Box key={image.name} p={2}>
-                                        <img
-                                            src={URL.createObjectURL(image)}
-                                            alt={image.name}
-                                            style={{ height: "100px" }}
-                                        />
-                                    </Box>
-                                ))}
-                            </HStack>
-                        </Box>
-                    )}
+                    <Text>プレビュー画面</Text>
+
+                    <Box display={"flex"} p={4} bg={"gray.100"}>
+                        {data.existingImages.map((image, index) => (
+                            <Box key={image.id} p={2} position={"relative"}>
+                                <img
+                                    src={
+                                        import.meta.env.VITE_APP_URL +
+                                        "/" +
+                                        image.file_path
+                                    }
+                                    alt={image.file_name}
+                                    style={{ height: "100px" }}
+                                />
+                                <IconButton
+                                    isRound={true}
+                                    position={"absolute"}
+                                    top={-4}
+                                    right={-2}
+                                    variant="solid"
+                                    colorScheme="gray"
+                                    border="black.800"
+                                    borderWidth={1}
+                                    opacity={0.7}
+                                    _hover={{ opacity: 1 }}
+                                    aria-lavel="Done"
+                                    fontSize={{ base: "xs", md: "10px" }}
+                                    icon={<CloseIcon />}
+                                    onClick={handleRemoveImage(
+                                        index,
+                                        "existing"
+                                    )}
+                                ></IconButton>
+                            </Box>
+                        ))}
+                        {/* プレビュー */}
+                        {data.images.length > 0 && (
+                            <Box>
+                                <HStack></HStack>
+                                <HStack>
+                                    {data.images.map((image, index) => (
+                                        <Box
+                                            key={image.name}
+                                            p={2}
+                                            position={"relative"}
+                                        >
+                                            <img
+                                                src={URL.createObjectURL(image)}
+                                                alt={image.name}
+                                                style={{ height: "100px" }}
+                                            />
+                                            <IconButton
+                                                isRound={true}
+                                                position={"absolute"}
+                                                top={-4}
+                                                right={-2}
+                                                variant="solid"
+                                                colorScheme="gray"
+                                                border="black.800"
+                                                borderWidth={1}
+                                                opacity={0.7}
+                                                _hover={{ opacity: 1 }}
+                                                aria-lavel="Done"
+                                                fontSize={{
+                                                    base: "xs",
+                                                    md: "10px",
+                                                }}
+                                                icon={<CloseIcon />}
+                                                onClick={handleRemoveImage(
+                                                    index,
+                                                    "new"
+                                                )}
+                                            ></IconButton>
+                                        </Box>
+                                    ))}
+                                </HStack>
+                            </Box>
+                        )}
+                    </Box>
                     <Input
                         type="file"
                         id="images"
