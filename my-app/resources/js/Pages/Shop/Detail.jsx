@@ -11,6 +11,8 @@ import {
     useToast,
 } from "@chakra-ui/react";
 import { Link } from "@inertiajs/react";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
+import "@splidejs/splide/dist/css/themes/splide-default.min.css";
 import { useEffect } from "react";
 
 const Detail = (props) => {
@@ -46,8 +48,27 @@ const Detail = (props) => {
                 duration: 9000,
                 inClosable: true,
             });
+        } else if (props.status === "shop-updated") {
+            toast({
+                position: "bottom-right",
+                title: "店舗更新成功",
+                description: "店舗の更新が完了しました",
+                status: "success",
+                duration: 9000,
+                inClosable: true,
+            });
         }
     }, [props.flash, props.status]);
+
+    const options = {
+        type: "loop",
+        gap: "1rem",
+        autoplay: true,
+        interval: 2000,
+        pauseOnHover: true,
+        resetProgress: false,
+        height: "15rem",
+    };
 
     return (
         <Box p={4}>
@@ -63,18 +84,29 @@ const Detail = (props) => {
             </HStack>
 
             {props.shop.shop_images ? (
-                props.shop.shop_images.map((image) => (
-                    <Image
-                        key={image.id}
-                        boxSize="300px"
-                        objectFit="contain"
-                        src={
-                            import.meta.env.VITE_APP_URL + "/" + image.file_path
-                        }
-                        alt={image.file_name}
-                        md={4}
-                    />
-                ))
+                <Box w={300}>
+                    <Splide
+                        options={options}
+                        aria-lavelledby="autoplay-example-heading"
+                    >
+                        {props.shop.shop_images.map((image) => (
+                            <SplideSlide>
+                                <Image
+                                    key={image.id}
+                                    boxSize="300px"
+                                    objectFit="contain"
+                                    src={
+                                        import.meta.env.VITE_APP_URL +
+                                        "/" +
+                                        image.file_path
+                                    }
+                                    alt={image.file_name}
+                                    md={4}
+                                />
+                            </SplideSlide>
+                        ))}
+                    </Splide>
+                </Box>
             ) : (
                 <Image
                     boxSize="300px"

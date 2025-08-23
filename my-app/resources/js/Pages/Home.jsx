@@ -26,6 +26,15 @@ const Home = (props) => {
                 duration: 5000,
                 isClosable: true,
             });
+        } else if (props.status === "shop-deleted") {
+            toast({
+                position: "bottom-right",
+                title: "店舗削除成功",
+                description: "店舗の削除が完了しました",
+                status: "error",
+                duration: 9000,
+                inClosable: true,
+            });
         }
     }, [props.flash]);
     return (
